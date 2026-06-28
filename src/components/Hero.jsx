@@ -1,90 +1,99 @@
-import { useLayoutEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import EmberField from './EmberField'
-import { prefersReducedMotion } from '../lib/motion'
-import './hero.css'
+import { useLayoutEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import EmberField from "./EmberField";
+import { prefersReducedMotion } from "../lib/motion";
+import "./hero.css";
 
-const NAME = 'effect'
+const NAME = "effect";
 
 export default function Hero() {
-  const root = useRef(null)
-  const glow = useRef(null)
+  const root = useRef(null);
+  const glow = useRef(null);
 
   useLayoutEffect(() => {
-    const reduce = prefersReducedMotion()
+    const reduce = prefersReducedMotion();
     const ctx = gsap.context(() => {
-      const letters = gsap.utils.toArray('.hero__letter-inner')
-      const lines = gsap.utils.toArray('.hero__rise')
+      const letters = gsap.utils.toArray(".hero__letter-inner");
+      const lines = gsap.utils.toArray(".hero__rise");
 
       if (reduce) {
-        gsap.set([letters, lines], { yPercent: 0, opacity: 1 })
-        gsap.set(letters, { backgroundPosition: '50% 40%' })
-        gsap.set(glow.current, { opacity: 0.6, scale: 1 })
-        return
+        gsap.set([letters, lines], { yPercent: 0, opacity: 1 });
+        gsap.set(letters, { backgroundPosition: "50% 40%" });
+        gsap.set(glow.current, { opacity: 0.6, scale: 1 });
+        return;
       }
 
       // explicit start states — GSAP must own the transform up front, or a
       // .to() from a CSS-only transform leaves yPercent unanimated.
-      gsap.set(letters, { yPercent: 110, backgroundPosition: '50% 100%' })
-      gsap.set(lines, { yPercent: 110, opacity: 0 })
+      gsap.set(letters, { yPercent: 110, backgroundPosition: "50% 100%" });
+      gsap.set(lines, { yPercent: 110, opacity: 0 });
 
       // --- the orchestrated ignition -----------------------------------
-      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
+      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
       tl.fromTo(
         glow.current,
         { opacity: 0, scale: 0.6 },
-        { opacity: 1, scale: 1, duration: 1.6, ease: 'power2.out' },
+        { opacity: 1, scale: 1, duration: 1.6, ease: "power2.out" },
         0,
       )
         // letters rise out from under their masks, staggered like titles,
         // while the flame catches and licks upward through each glyph
-        .to(
-          letters,
-          { yPercent: 0, duration: 1.1, stagger: 0.07 },
-          0.15,
-        )
+        .to(letters, { yPercent: 0, duration: 1.1, stagger: 0.07 }, 0.15)
         .to(
           letters,
           {
-            backgroundPosition: '50% 40%',
+            backgroundPosition: "50% 40%",
             duration: 1.2,
-            ease: 'power2.inOut',
+            ease: "power2.inOut",
             stagger: 0.06,
           },
           0.45,
         )
         // slogan + meta rise after the name lands
-        .to(lines, { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.12 }, 0.8)
-        .from('.hero__cue', { opacity: 0, y: 14, duration: 0.6 }, 1.3)
+        .to(
+          lines,
+          { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.12 },
+          0.8,
+        )
+        .from(".hero__cue", { opacity: 0, y: 14, duration: 0.6 }, 1.3);
 
       // --- parallax: the glow + name drift as you scroll away ----------
-      gsap.to(glow.current, {
-        yPercent: 30,
-        scale: 1.25,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: root.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
+      // fromTo with an explicit start (scale: 1) so the scrub doesn't try to
+      // read a live value mid-intro and snap the glow back down on first scroll.
+      gsap.fromTo(
+        glow.current,
+        { yPercent: 0, scale: 1 },
+        {
+          yPercent: 30,
+          scale: 1.25,
+          ease: "none",
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
         },
-      })
-      gsap.to('.hero__name', {
+      );
+      gsap.to(".hero__name", {
         yPercent: -12,
-        ease: 'none',
+        ease: "none",
         scrollTrigger: {
           trigger: root.current,
-          start: 'top top',
-          end: 'bottom top',
+          start: "top top",
+          end: "bottom top",
           scrub: true,
         },
-      })
-    }, root)
+      });
 
-    return () => ctx.revert()
-  }, [])
+      // recompute trigger positions after layout/intro settles
+      ScrollTrigger.refresh();
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section id="top" className="hero section--dark" ref={root}>
@@ -100,7 +109,7 @@ export default function Hero() {
         </p>
 
         <h1 className="hero__name display" aria-label={NAME}>
-          {NAME.split('').map((ch, i) => (
+          {NAME.split("").map((ch, i) => (
             <span className="hero__letter" key={i} aria-hidden="true">
               <span className="hero__letter-inner">{ch}</span>
             </span>
@@ -109,7 +118,9 @@ export default function Hero() {
 
         <p className="hero__slogan">
           <span className="line-mask">
-            <span className="line-inner hero__rise">I build interfaces with weight,</span>
+            <span className="line-inner hero__rise">
+              I build interfaces with weight,
+            </span>
           </span>
           <span className="line-mask">
             <span className="line-inner hero__rise">
@@ -124,5 +135,5 @@ export default function Hero() {
         <span className="hero__cue-line" aria-hidden="true" />
       </a>
     </section>
-  )
+  );
 }

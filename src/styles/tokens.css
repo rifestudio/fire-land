@@ -50,9 +50,13 @@
   --on-light-faint: rgba(23, 17, 13, 0.34);
 
   /* --- type ------------------------------------------------- */
-  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* --font-display: "Lausanne", system-ui, sans-serif; */
+  /* --font-body: 'Lausanne', system-ui, -apple-system, sans-serif; */
+  /* --font-mono: "Lausanne", ui-monospace, "SFMono-Regular", monospace; */
 
   /* fluid type scale (clamp: min, preferred-vw, max) */
   --t-mark: 0.78rem; /* mono labels / >>> marks */
