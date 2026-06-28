@@ -1,0 +1,44 @@
+/* App-level section rhythm and the dark/light grounds.
+   The page breathes warm-white; fire burns at the bookends (Hero, Contact). */
+
+main {
+  position: relative;
+}
+
+.section {
+  position: relative;
+  padding-block: var(--s-9);
+}
+
+/* dark ground — fire burns against it */
+.section--dark {
+  background: var(--ink);
+  color: var(--on-dark);
+}
+
+/* warm-white ground — restraint, negative space, the work breathes */
+.section--light {
+  background: var(--warm-white);
+  color: var(--on-light);
+}
+
+/* a small label that introduces each section, paired with an ignite mark */
+.section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: var(--s-5);
+  color: var(--on-light-dim);
+}
+.section--dark .section-eyebrow {
+  color: var(--on-dark-dim);
+}
+.section-eyebrow .idx {
+  color: inherit;
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding-block: var(--s-7);
+  }
+}

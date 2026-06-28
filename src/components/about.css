@@ -1,0 +1,75 @@
+.about {
+  background: var(--warm-white);
+}
+
+.about__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.about__manifesto {
+  font-size: var(--t-h2);
+  color: var(--on-light);
+  max-width: 11ch;
+  letter-spacing: -0.015em;
+}
+
+.about__body {
+  padding-top: 0.6rem;
+}
+.about__p {
+  font-size: var(--t-lead);
+  line-height: 1.4;
+  color: var(--on-light);
+  font-weight: 400;
+  max-width: 30ch;
+  margin-bottom: var(--s-3);
+}
+.about__p strong {
+  font-weight: 600;
+}
+
+.about__stack-wrap {
+  margin-top: var(--s-5);
+  border-top: var(--hairline-light);
+  padding-top: var(--s-3);
+}
+.about__stack-label {
+  display: block;
+  color: var(--on-light-faint);
+  margin-bottom: var(--s-2);
+}
+.about__stack {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.6rem;
+}
+.about__stack li {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  padding: 0.4rem 0.8rem;
+  border: var(--hairline-light);
+  border-radius: 999px;
+  color: var(--on-light-dim);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.about__stack li:hover {
+  border-color: var(--fire-orange);
+  color: var(--on-light);
+}
+
+@media (max-width: 820px) {
+  .about__grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .about__manifesto {
+    max-width: 16ch;
+  }
+}

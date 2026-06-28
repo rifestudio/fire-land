@@ -1,0 +1,177 @@
+/* ============================================================
+   effect — base & global
+   ============================================================ */
+
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Lenis: html.lenis controls scroll; keep native fallback intact */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  background: var(--warm-white);
+  color: var(--on-light);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  font-weight: 400;
+  overflow-x: hidden;
+  /* faint warm paper grain so the white never reads as flat/clinical */
+  background-image: radial-gradient(
+    rgba(23, 17, 13, 0.022) 1px,
+    transparent 1px
+  );
+  background-size: 3px 3px;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* --- selection & focus ------------------------------------- */
+::selection {
+  background: var(--fire-orange);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--fire-orange);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* --- shared primitives ------------------------------------- */
+.shell {
+  width: 100%;
+  max-width: var(--max-w);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 0.86;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.mark {
+  font-family: var(--font-mono);
+  font-size: var(--t-mark);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* the recurring signature: >>> ignite marks */
+.ignite {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: var(--grad-fire);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: background-position var(--dur-mid) var(--ease-out);
+}
+
+/* fire-filled text */
+.firetext {
+  background: var(--grad-fire);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* line-mask used by scroll reveals: child rises out from under */
+.line-mask {
+  display: block;
+  overflow: hidden;
+}
+.line-inner {
+  display: block;
+  will-change: transform;
+}
+
+/* visually hidden, still in a11y tree */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: var(--gutter);
+  z-index: var(--z-overlay);
+  background: var(--ink);
+  color: var(--on-dark);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius);
+  transition: top 0.2s var(--ease-out);
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* --- reduced motion: stillness is the fallback ------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

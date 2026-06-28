@@ -1,0 +1,93 @@
+/* ============================================================
+   effect — design tokens
+   The fire system: warm white as the calm base, a warm
+   near-black ground for fire to burn against, and a dosed
+   red→orange→amber energy reserved for the moments that matter.
+   ============================================================ */
+
+:root {
+  /* --- ground & light --------------------------------------- */
+  --warm-white: #f6f1e9; /* soft warm white — never pure #fff */
+  --warm-white-2: #efe7da; /* recessed warm white (cards, fills) */
+  --ink: #0b0807; /* warm near-black ground */
+  --ink-2: #14100d; /* raised warm black (cards on dark) */
+  --ink-3: #1f1813; /* hairlines on dark */
+
+  /* --- fire (the energy) ------------------------------------ */
+  --fire-red: #ff2d0e;
+  --fire-ember: #ff4d1c;
+  --fire-orange: #ff7a18;
+  --fire-amber: #ffb020;
+  --fire-core: #fff3d6; /* the white-hot center of a flame */
+
+  /* fire as gradients, never as a flat fill */
+  --grad-fire: linear-gradient(
+    115deg,
+    var(--fire-red) 0%,
+    var(--fire-ember) 32%,
+    var(--fire-orange) 64%,
+    var(--fire-amber) 100%
+  );
+  --grad-fire-soft: linear-gradient(
+    115deg,
+    #ff4423 0%,
+    #ff7a18 60%,
+    #ffb020 100%
+  );
+  --glow-ember: radial-gradient(
+    circle at center,
+    rgba(255, 122, 24, 0.55) 0%,
+    rgba(255, 45, 14, 0.28) 32%,
+    rgba(255, 45, 14, 0) 70%
+  );
+
+  /* --- text ------------------------------------------------- */
+  --on-dark: #f3ece1;
+  --on-dark-dim: rgba(243, 236, 225, 0.56);
+  --on-dark-faint: rgba(243, 236, 225, 0.32);
+  --on-light: #17110d;
+  --on-light-dim: rgba(23, 17, 13, 0.58);
+  --on-light-faint: rgba(23, 17, 13, 0.34);
+
+  /* --- type ------------------------------------------------- */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* fluid type scale (clamp: min, preferred-vw, max) */
+  --t-mark: 0.78rem; /* mono labels / >>> marks */
+  --t-body: clamp(1rem, 0.95rem + 0.4vw, 1.18rem);
+  --t-lead: clamp(1.3rem, 1.1rem + 1.4vw, 2rem);
+  --t-h3: clamp(1.6rem, 1.2rem + 2vw, 2.6rem);
+  --t-h2: clamp(2.6rem, 1.6rem + 5vw, 6rem);
+  --t-display: clamp(4.5rem, 2rem + 18vw, 22rem); /* the name */
+
+  /* --- spacing (8pt rhythm) --------------------------------- */
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2rem;
+  --s-5: 3rem;
+  --s-6: 4rem;
+  --s-7: 6rem;
+  --s-8: 9rem;
+  --s-9: 13rem;
+
+  --gutter: clamp(1.5rem, 5vw, 6rem);
+  --max-w: 88rem;
+
+  /* --- motion ----------------------------------------------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* expressive ease-out */
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --dur-fast: 0.28s;
+  --dur-mid: 0.5s;
+  --dur-slow: 0.9s;
+
+  /* --- misc ------------------------------------------------- */
+  --radius: 4px;
+  --hairline-dark: 1px solid var(--ink-3);
+  --hairline-light: 1px solid rgba(23, 17, 13, 0.12);
+  --z-cursor: 9999;
+  --z-nav: 100;
+  --z-overlay: 200;
+}

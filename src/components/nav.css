@@ -1,0 +1,88 @@
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--z-nav);
+  padding-block: clamp(1rem, 2vw, 1.6rem);
+  /* colour follows the ground under the nav (set per .nav--dark/light) */
+  color: var(--on-dark);
+  transition:
+    padding 0.4s var(--ease-out),
+    color 0.5s var(--ease-out);
+}
+.nav.is-scrolled {
+  padding-block: 0.85rem;
+}
+.nav--dark {
+  color: var(--on-dark);
+}
+.nav--light {
+  color: var(--on-light);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav__brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.55rem;
+}
+.nav__brand-mark {
+  font-size: 0.85rem;
+}
+.nav__brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 0.01em;
+  text-transform: lowercase;
+  color: currentColor;
+}
+
+.nav__links {
+  display: flex;
+  gap: clamp(1.2rem, 3vw, 2.6rem);
+}
+.nav__link {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: currentColor;
+  position: relative;
+  padding-block: 0.2rem;
+}
+.nav__link-text {
+  position: relative;
+  display: inline-block;
+}
+/* an underline that ignites from the left on hover/focus */
+.nav__link-text::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1.5px;
+  background: var(--grad-fire);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-fast) var(--ease-out);
+  mix-blend-mode: normal;
+}
+.nav__link:hover .nav__link-text::after,
+.nav__link:focus-visible .nav__link-text::after {
+  transform: scaleX(1);
+}
+
+@media (max-width: 560px) {
+  .nav__links {
+    gap: 1rem;
+  }
+  .nav__link {
+    font-size: 0.74rem;
+  }
+}

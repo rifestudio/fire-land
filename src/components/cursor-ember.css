@@ -1,0 +1,36 @@
+.cursor-ember {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 320px;
+  pointer-events: none;
+  z-index: var(--z-cursor);
+  background: var(--glow-ember);
+  mix-blend-mode: plus-lighter;
+  will-change: transform;
+  opacity: 0; /* hidden until the first pointer move marks it live */
+}
+.cursor-ember.is-live {
+  /* a slow breathing flicker so the heat never sits perfectly still */
+  animation: ember-flicker 2.6s var(--ease-in-out) infinite;
+}
+
+@keyframes ember-flicker {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  40% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-ember {
+    display: none;
+  }
+}
