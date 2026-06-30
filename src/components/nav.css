@@ -63,7 +63,8 @@
   position: relative;
   display: inline-block;
 }
-/* an underline that ignites from the left on hover/focus */
+/* an underline that ignites from the left on hover/focus, then retracts to
+   the right when the pointer leaves (origin flips between the two states) */
 .nav__link-text::after {
   content: '';
   position: absolute;
@@ -73,13 +74,14 @@
   height: 1.5px;
   background: var(--grad-fire);
   transform: scaleX(0);
-  transform-origin: left;
+  transform-origin: right;
   transition: transform var(--dur-fast) var(--ease-out);
   mix-blend-mode: normal;
 }
 .nav__link:hover .nav__link-text::after,
 .nav__link:focus-visible .nav__link-text::after {
   transform: scaleX(1);
+  transform-origin: left;
 }
 
 @media (max-width: 560px) {

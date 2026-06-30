@@ -6,16 +6,17 @@ import { prefersReducedMotion } from "../lib/motion";
 import "./about.css";
 
 const STACK = [
+  "JavaScript",
+  "Python",
   "React",
-  "TypeScript",
+  "Next.js",
+  "Django",
+  "FastAPI",
   "GSAP",
   "Framer Motion",
-  "Lenis",
-  "WebGL / Three.js",
-  "Vite",
-  "Node",
+  "Three.js",
+  "PostgreSQL",
 ];
-
 export default function About() {
   const root = useRef(null);
 

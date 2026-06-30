@@ -54,10 +54,21 @@ export function useSmoothScroll() {
     }
     document.addEventListener('click', onClick)
 
+    // While the tab is hidden, rAF/Lenis pause and the layout can shift in the
+    // background (fonts, late media, the fixed finale's height). ScrollTrigger
+    // caches each trigger's start/end against the old layout, so on return the
+    // scrub parallax lands at a stale value ("too parallaxed"). Recompute when
+    // the page becomes visible again.
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') ScrollTrigger.refresh()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+
     ScrollTrigger.refresh()
 
     return () => {
       document.removeEventListener('click', onClick)
+      document.removeEventListener('visibilitychange', onVisible)
       if (raf) gsap.ticker.remove(raf)
       if (lenis) lenis.destroy()
     }

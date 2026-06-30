@@ -44,11 +44,12 @@
 }
 .work-card__screen-img {
   position: absolute;
-  /* Generous overhang on top and bottom (set via inset, which stretches the
-     element to 144% reliably — more robust than a % height against an
-     aspect-ratio box) so the parallax can travel without ever exposing the
-     frame's edge/border. Must stay larger than the ±range in Work.jsx. */
-  inset: -22% 0;
+  /* Overhang on top and bottom (set via inset, which stretches the element
+     reliably — more robust than a % height against an aspect-ratio box) gives
+     the parallax room to travel. Kept just a touch larger than the travel (see
+     ±range in Work.jsx) so the picture nearly reaches its own edge at each
+     extreme — close to flush — while the frame border still never shows. */
+  inset: -13% 0;
   /* cover-fit applies to the <video> variant; harmless for the bg-image <div> */
   width: 100%;
   object-fit: cover;

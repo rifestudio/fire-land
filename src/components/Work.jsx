@@ -21,45 +21,46 @@ import qwins_video from "../assets/videos/qwins.mp4";
 const PROJECTS = [
   {
     n: "01",
-    title: "Ember",
-    role: "Design & build",
+    title: "Hashix",
+    role: "Full-stack build",
     year: "2025",
     blurb:
-      "A live ops console where every state change reads as motion, not noise.",
-    tags: ["React", "WebGL", "GSAP"],
+      "A mining-ops platform where the machine feels alive — every payout, breakdown, and repair reads as motion, not noise.",
+    tags: ["React", "Django", "POSTGRES"],
     visual: "v-ember",
-    video: qwins_video,
-  },
-  {
-    n: "02",
-    title: "Kiln",
-    role: "Frontend lead",
-    year: "2024",
-    blurb:
-      "A type-first publishing tool. The editor disappears; the writing glows.",
-    tags: ["Next.js", "Lenis", "TypeScript"],
-    visual: "v-kiln",
-    image: hash,
-  },
-  {
-    n: "03",
-    title: "Vesta",
-    role: "Interaction & motion",
-    year: "2024",
-    blurb:
-      "Commerce that feels physical — weight, inertia, and heat on every tap.",
-    tags: ["React", "Framer Motion"],
-    visual: "v-vesta",
     image: hashix,
   },
   {
-    n: "04",
-    title: "Halcyon",
-    role: "Solo build",
-    year: "2023",
+    n: "02",
+    title: "Qwins",
+    role: "Frontend",
+    year: "2024",
     blurb:
-      "A calm dashboard for loud data. Stillness first, fire only where it counts.",
-    tags: ["Vue", "D3", "Canvas"],
+      "A hosting-provider site built for pixel-precision — instant page transitions, theme and language that flip without a flicker.",
+    tags: ["Next.js", "Tailwind", "Framer Motion"],
+    visual: "v-kiln",
+
+    video: qwins_video,
+  },
+  {
+    n: "03",
+    title: "HashProfit",
+    role: "Full-stack build",
+    year: "2025",
+    blurb:
+      "A marketplace for reselling hash keys, with a payment layer built from raw blockchain primitives — every transaction handled by hand, no off-the-shelf rails.",
+    tags: ["Web3", "React", "Django"],
+    visual: "v-vesta",
+    image: hash,
+  },
+  {
+    n: "04",
+    title: "CSBAZAAR",
+    role: "Frontend",
+    year: "2024",
+    blurb:
+      "A CS2 trading platform — front-end built from zero, with non-standard Telegram auth and a backend we ended up rescuing along the way.",
+    tags: ["React", "Recharts", "TypeScript"],
     visual: "v-halcyon",
     image: cs,
   },
@@ -85,9 +86,10 @@ export default function Work() {
         // it starts at one edge and parallaxes to the other, never exposing
         // the empty frame behind it.
         const screen = card.querySelector(".work-card__screen-img");
-        // yPercent travel. Element is 144% tall (see work.css), so ±8 moves it
-        // ~11.5% of the frame — comfortably inside the 22% overhang, leaving a
-        // wide margin so the frame border never shows.
+        // yPercent travel. Element is 126% tall (see work.css), so ±8 moves it
+        // ~10% of the frame — just shy of the 13% overhang, so the picture
+        // parallaxes nearly edge-to-edge (starts close to its own border)
+        // while keeping a small safety margin so the frame border never shows.
         const range = 8;
         const from = i % 2 === 0 ? range : -range;
         gsap.fromTo(
