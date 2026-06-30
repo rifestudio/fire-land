@@ -105,7 +105,7 @@ export default function Hero() {
           <span className="ignite" aria-hidden="true">
             &gt;&gt;&gt;
           </span>
-          frontend developer · solo
+          Product Engineer
         </p>
 
         <h1 className="hero__name display" aria-label={NAME}>

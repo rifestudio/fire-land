@@ -1,6 +1,6 @@
 # effect
 
-A motion-driven personal portfolio for **effect** — a solo frontend developer.
+A motion-driven personal portfolio for **effect** — a solo Product Engineer.
 
 The idea: a simple, quiet layout carried almost entirely by motion and timing.
 Restraint in layout, boldness in movement. A warm-white canvas that breathes,
