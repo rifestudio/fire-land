@@ -14,23 +14,22 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export function useSmoothScroll() {
   useEffect(() => {
-    if (prefersReducedMotion()) {
-      ScrollTrigger.refresh()
-      return
+    const reduce = prefersReducedMotion()
+
+    let lenis = null
+    let raf = null
+    if (!reduce) {
+      lenis = new Lenis({
+        duration: 1.15,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: 1.4,
+      })
+      lenis.on('scroll', ScrollTrigger.update)
+      raf = (time) => lenis.raf(time * 1000)
+      gsap.ticker.add(raf)
+      gsap.ticker.lagSmoothing(0)
     }
-
-    const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      touchMultiplier: 1.4,
-    })
-
-    lenis.on('scroll', ScrollTrigger.update)
-
-    const raf = (time) => lenis.raf(time * 1000)
-    gsap.ticker.add(raf)
-    gsap.ticker.lagSmoothing(0)
 
     // anchor links route through Lenis for a smooth glide
     const onClick = (e) => {
@@ -41,7 +40,17 @@ export function useSmoothScroll() {
       const target = document.querySelector(id)
       if (!target) return
       e.preventDefault()
-      lenis.scrollTo(target, { offset: 0, duration: 1.3 })
+      // the finale is a fixed section behind the page — it has no scroll
+      // position, so route its link to the bottom of the page, which reveals it
+      if (getComputedStyle(target).position === 'fixed') {
+        const bottom = document.documentElement.scrollHeight
+        if (lenis) lenis.scrollTo(bottom, { duration: 1.3 })
+        else window.scrollTo({ top: bottom, behavior: 'smooth' })
+      } else if (lenis) {
+        lenis.scrollTo(target, { offset: 0, duration: 1.3 })
+      } else {
+        target.scrollIntoView({ behavior: 'smooth' })
+      }
     }
     document.addEventListener('click', onClick)
 
@@ -49,8 +58,8 @@ export function useSmoothScroll() {
 
     return () => {
       document.removeEventListener('click', onClick)
-      gsap.ticker.remove(raf)
-      lenis.destroy()
+      if (raf) gsap.ticker.remove(raf)
+      if (lenis) lenis.destroy()
     }
   }, [])
 }

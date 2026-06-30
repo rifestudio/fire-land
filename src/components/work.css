@@ -44,14 +44,39 @@
 }
 .work-card__screen-img {
   position: absolute;
-  inset: -8% 0;
-  height: 116%;
-  filter: grayscale(1) contrast(1.05) brightness(0.96);
+  /* Generous overhang on top and bottom (set via inset, which stretches the
+     element to 144% reliably — more robust than a % height against an
+     aspect-ratio box) so the parallax can travel without ever exposing the
+     frame's edge/border. Must stay larger than the ±range in Work.jsx. */
+  inset: -22% 0;
+  /* cover-fit applies to the <video> variant; harmless for the bg-image <div> */
+  width: 100%;
+  object-fit: cover;
   transform: scale(1.04);
+  transition: transform 0.7s var(--ease-out);
+  will-change: transform;
+}
+
+/* Image variant only: greyscale-at-rest via a CSS filter (cheap on a static
+   <div>). The <video> variant is desaturated by the blend overlay below
+   instead — filtering a playing video stalls its decode on hover. */
+div.work-card__screen-img {
+  filter: grayscale(1) contrast(1.05) brightness(0.96);
   transition:
     filter 0.6s var(--ease-out),
     transform 0.7s var(--ease-out);
   will-change: transform, filter;
+}
+
+/* video variant: a gray overlay blended with `saturation` removes colour;
+   its opacity fades on hover (compositor-only, so the video keeps playing) */
+.work-card__desat {
+  position: absolute;
+  inset: 0;
+  background: #707070;
+  mix-blend-mode: saturation;
+  transition: opacity 0.6s var(--ease-out);
+  pointer-events: none;
 }
 .work-card__glow {
   position: absolute;
@@ -64,9 +89,17 @@
 }
 
 /* hover/focus: the screen ignites — color returns, heat blooms, it lifts */
+.work-card__link:hover div.work-card__screen-img,
+.work-card__link:focus-visible div.work-card__screen-img {
+  filter: grayscale(0) contrast(1.05) brightness(1.02) saturate(1.15);
+}
+/* colour returns to the video by fading out its desaturation overlay */
+.work-card__link:hover .work-card__desat,
+.work-card__link:focus-visible .work-card__desat {
+  opacity: 0;
+}
 .work-card__link:hover .work-card__screen-img,
 .work-card__link:focus-visible .work-card__screen-img {
-  filter: grayscale(0) contrast(1.05) brightness(1.02) saturate(1.15);
   transform: scale(1);
 }
 .work-card__link:hover .work-card__glow,
@@ -182,9 +215,15 @@
     order: 0;
   }
   /* on touch there's no hover — show colour at rest so work isn't grey */
-  .work-card__screen-img {
+  div.work-card__screen-img {
     filter: grayscale(0.15) saturate(1.1);
+  }
+  .work-card__screen-img {
     transform: scale(1);
+  }
+  /* let videos play in colour at rest too (no hover to reveal it) */
+  .work-card__desat {
+    opacity: 0;
   }
   .work-card__arrow {
     opacity: 1;

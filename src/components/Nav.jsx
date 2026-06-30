@@ -15,7 +15,16 @@ export default function Nav() {
   const [ground, setGround] = useState('dark')
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.6)
+    const main = document.querySelector('main')
+    const onScroll = () => {
+      const y = window.scrollY
+      setScrolled(y > window.innerHeight * 0.6)
+      // once the page has scrolled up off its end, the fixed dark finale sits
+      // under the nav band — keep nav text legible against it
+      if (main && y + window.innerHeight * 0.06 > main.offsetHeight) {
+        setGround('dark')
+      }
+    }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
 

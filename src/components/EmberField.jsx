@@ -40,14 +40,31 @@ export default function EmberField({ density = 56, className = "" }) {
       };
     }
 
-    const resize = () => {
+    const applySize = () => {
+      const nw = canvas.offsetWidth;
+      const nh = canvas.offsetHeight;
+      // ignore not-yet-laid-out (0) reads and no-op events (mobile URL bar)
+      if (!nw || !nh || (nw === w && nh === h)) return false;
+      const prevW = w;
+      const prevH = h;
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = canvas.offsetWidth;
-      h = canvas.offsetHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
+      w = nw;
+      h = nh;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      seed();
+      if (!embers.length) {
+        seed();
+      } else {
+        // a genuine resize: keep embers where they are instead of teleporting
+        const sx = w / prevW;
+        const sy = h / prevH;
+        embers.forEach((e) => {
+          e.x *= sx;
+          e.y *= sy;
+        });
+      }
+      return true;
     };
 
     const drawStill = () => {
@@ -56,11 +73,18 @@ export default function EmberField({ density = 56, className = "" }) {
     };
 
     function paint(e, alphaScale) {
+      // The life term goes <= 0 on the frame an ember dies. Canvas silently
+      // ignores an out-of-range globalAlpha, which would leave the previous
+      // ember's (often full) alpha in place — a sharp flash just before the
+      // ember respawns. Clamp, and skip drawing once fully faded.
+      const fade = 1 - e.life / e.maxLife;
+      if (fade <= 0) return;
+      const a = alphaScale * (0.5 + 0.5 * Math.sin(e.flick)) * fade;
+      if (a <= 0) return;
+      ctx.globalAlpha = a > 1 ? 1 : a;
       const g = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.r * 4);
       g.addColorStop(0, e.hue);
       g.addColorStop(1, "rgba(255,77,28,0)");
-      ctx.globalAlpha =
-        alphaScale * (0.5 + 0.5 * Math.sin(e.flick)) * (1 - e.life / e.maxLife);
       ctx.fillStyle = g;
       ctx.beginPath();
       ctx.arc(e.x, e.y, e.r * 4, 0, Math.PI * 2);
@@ -84,34 +108,39 @@ export default function EmberField({ density = 56, className = "" }) {
       raf = requestAnimationFrame(tick);
     };
 
-    resize();
-    window.addEventListener("resize", resize);
+    applySize();
+
+    // Observe the canvas box, not window 'resize': mobile browsers fire resize
+    // on every URL-bar show/hide while scrolling, which previously reseeded the
+    // whole field and made embers jump around. ResizeObserver only fires on a
+    // real box-size change.
+    const ro = new ResizeObserver(() => {
+      if (applySize() && reduce) drawStill();
+    });
+    ro.observe(canvas);
 
     if (reduce) {
       drawStill();
-    } else {
-      // pause when offscreen / tab hidden to save the main thread
-      const io = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting && !raf) {
-          running = true;
-          raf = requestAnimationFrame(tick);
-        } else {
-          running = false;
-          cancelAnimationFrame(raf);
-          raf = null;
-        }
-      });
-      io.observe(canvas);
-      return () => {
-        io.disconnect();
-        cancelAnimationFrame(raf);
-        window.removeEventListener("resize", resize);
-      };
+      return () => ro.disconnect();
     }
 
+    // pause when offscreen / tab hidden to save the main thread
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !raf) {
+        running = true;
+        raf = requestAnimationFrame(tick);
+      } else {
+        running = false;
+        cancelAnimationFrame(raf);
+        raf = null;
+      }
+    });
+    io.observe(canvas);
+
     return () => {
+      ro.disconnect();
+      io.disconnect();
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
     };
   }, [density]);
 

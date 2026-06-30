@@ -21,8 +21,9 @@ export default function App() {
         <Hero />
         <Work />
         <About />
-        <Contact />
       </main>
+      {/* the finale stays fixed beneath the page and is revealed on scroll-end */}
+      <Contact />
     </>
   )
 }

@@ -8,7 +8,13 @@ import { splitWords, prefersReducedMotion } from '../lib/motion'
  * as the element enters view — the "titles igniting" motif. Renders as the
  * tag you pass (default h2). Reduced motion → words simply present, no rise.
  */
-export default function RevealText({ as: Tag = 'h2', text, className = '', stagger = 0.08 }) {
+export default function RevealText({
+  as: Tag = 'h2',
+  text,
+  className = '',
+  stagger = 0.08,
+  immediate = false,
+}) {
   const ref = useRef(null)
 
   useEffect(() => {
@@ -27,16 +33,21 @@ export default function RevealText({ as: Tag = 'h2', text, className = '', stagg
       duration: 1,
       ease: 'power4.out',
       stagger,
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 82%',
-      },
+      delay: immediate ? 0.35 : 0,
+      // a fixed/always-in-view element (e.g. the revealed finale) plays on
+      // mount; everything else rises as it scrolls into view
+      scrollTrigger: immediate
+        ? undefined
+        : {
+            trigger: el,
+            start: 'top 82%',
+          },
     })
     return () => {
       tween.scrollTrigger?.kill()
       tween.kill()
     }
-  }, [text, stagger])
+  }, [text, stagger, immediate])
 
   return (
     <Tag ref={ref} className={className}>

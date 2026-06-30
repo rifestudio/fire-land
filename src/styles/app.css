@@ -3,6 +3,12 @@
 
 main {
   position: relative;
+  z-index: 1;
+  background: var(--warm-white);
+  /* reserve room so the fixed finale section is revealed beneath the page end.
+     --finale-h is measured from the section and set in JS; 92svh matches its
+     min-height as a pre-measurement fallback. */
+  margin-bottom: var(--finale-h, 92svh);
 }
 
 .section {

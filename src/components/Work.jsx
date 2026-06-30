@@ -6,6 +6,17 @@ import { prefersReducedMotion } from "../lib/motion";
 import "./work.css";
 
 import qwins from "../assets/images/qwins.png";
+import hash from "../assets/images/Hash.png";
+import hashix from "../assets/images/hashix.png";
+import cs from "../assets/images/cs.png";
+
+import qwins_video from "../assets/videos/qwins.mp4";
+
+// To use a looped video for a case, import it here and set `video` on the
+// project below instead of `image`, e.g.:
+//   import emberClip from "../assets/videos/ember.mp4";
+//   { ...,  video: emberClip }
+// The video autoplays muted, loops, and gets the same parallax + hover as images.
 
 const PROJECTS = [
   {
@@ -17,7 +28,7 @@ const PROJECTS = [
       "A live ops console where every state change reads as motion, not noise.",
     tags: ["React", "WebGL", "GSAP"],
     visual: "v-ember",
-    image: qwins,
+    video: qwins_video,
   },
   {
     n: "02",
@@ -28,7 +39,7 @@ const PROJECTS = [
       "A type-first publishing tool. The editor disappears; the writing glows.",
     tags: ["Next.js", "Lenis", "TypeScript"],
     visual: "v-kiln",
-    image: qwins,
+    image: hash,
   },
   {
     n: "03",
@@ -39,7 +50,7 @@ const PROJECTS = [
       "Commerce that feels physical — weight, inertia, and heat on every tap.",
     tags: ["React", "Framer Motion"],
     visual: "v-vesta",
-    image: qwins,
+    image: hashix,
   },
   {
     n: "04",
@@ -50,7 +61,7 @@ const PROJECTS = [
       "A calm dashboard for loud data. Stillness first, fire only where it counts.",
     tags: ["Vue", "D3", "Canvas"],
     visual: "v-halcyon",
-    image: qwins,
+    image: cs,
   },
 ];
 
@@ -69,19 +80,33 @@ export default function Work() {
           scrollTrigger: { trigger: card, start: "top 88%" },
         });
 
-        // чётные — вверх, нечётные — вниз
+        // чётные — вверх, нечётные — вниз. Travel is bounded to the image's
+        // overhang (see work.css) so the picture always fills the frame —
+        // it starts at one edge and parallaxes to the other, never exposing
+        // the empty frame behind it.
         const screen = card.querySelector(".work-card__screen-img");
-        const dir = i % 2 === 0 ? -28 : 28;
-        gsap.to(screen, {
-          yPercent: dir,
-          ease: "none",
-          scrollTrigger: {
-            trigger: card,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
+        // yPercent travel. Element is 144% tall (see work.css), so ±8 moves it
+        // ~11.5% of the frame — comfortably inside the 22% overhang, leaving a
+        // wide margin so the frame border never shows.
+        const range = 8;
+        const from = i % 2 === 0 ? range : -range;
+        gsap.fromTo(
+          screen,
+          { yPercent: from },
+          {
+            yPercent: -from,
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom",
+              end: "bottom top",
+              // numeric scrub lerps the parallax toward its target every frame
+              // instead of snapping to each scroll event — smooth on iOS, where
+              // touch scroll isn't Lenis-smoothed and fires events in coarse steps
+              scrub: 0.6,
+            },
           },
-        });
+        );
       });
     }, root);
     return () => ctx.revert();
@@ -112,15 +137,35 @@ export default function Work() {
               aria-label={`${p.title} — ${p.role}, ${p.year}`}
             >
               <div className="work-card__screen">
-                <div
-                  className="work-card__screen-img"
-                  style={{
-                    backgroundImage: `url(${p.image})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                  aria-hidden="true"
-                />
+                {p.video ? (
+                  <>
+                    <video
+                      className="work-card__screen-img"
+                      src={p.video}
+                      poster={p.image}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="metadata"
+                      aria-hidden="true"
+                    />
+                    {/* desaturates the video via a blend overlay so the
+                        grayscale→colour hover animates opacity (cheap) instead
+                        of a per-frame filter on the video (which stalls it) */}
+                    <span className="work-card__desat" aria-hidden="true" />
+                  </>
+                ) : (
+                  <div
+                    className="work-card__screen-img"
+                    style={{
+                      backgroundImage: `url(${p.image})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                    aria-hidden="true"
+                  />
+                )}
                 <span className="work-card__glow" aria-hidden="true" />
               </div>
 

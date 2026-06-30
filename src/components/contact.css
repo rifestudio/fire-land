@@ -1,12 +1,29 @@
-.contact {
-  position: relative;
+/* The finale sits fixed at the bottom of the viewport, behind the page.
+   <main> carries a matching bottom margin so the page scrolls up off it and
+   the whole section is beautifully revealed from underneath at the end. */
+/* .section.contact (two classes) outranks the generic .section rule, whose
+   position:relative / padding would otherwise win on cascade order */
+.section.contact {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
   background: var(--ink);
   color: var(--on-dark);
   overflow: hidden;
-  min-height: 92svh;
+  /* locked to one viewport and pinned to the bottom, so the entire finale
+     (headline, CTA and footer) fits on screen and is revealed from underneath
+     — a taller-than-viewport section would push the top content off-screen */
+  height: 100svh;
+  padding-block: clamp(4.5rem, 12vh, 8rem) clamp(1.5rem, 4vh, 2.5rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* --parallax (set in JS) starts at half the viewport, so the section begins
+     with its lower half below the fold and slides up to 0 as it's revealed */
+  transform: translate3d(0, var(--parallax, 0px), 0);
+  will-change: transform;
 }
 
 .contact__embers {
